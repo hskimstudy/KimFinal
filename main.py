@@ -6,6 +6,7 @@ import pandas as pd
 import shap
 import numpy as np
 from fastapi.middleware.cors import CORSMiddleware
+import boto3
 
 app = FastAPI()
 
@@ -19,14 +20,28 @@ app.add_middleware(
 )
 
 
+def fetch_data_from_s3(bucket_name, file_names):
+    s3 = boto3.client('s3',
+	aws_access_key_id=
+    "AKIAWWRNGM6O3FR7WEQH",
+	aws_secret_access_key="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",)
+    for file_name in file_names:
+        s3.download_file(bucket_name, file_name, f'downloaded_{file_name}')
+
+
+fetch_data_from_s3('kimkimkim', ['lgb_model.pkl', 'merged_data.csv', 'movie_info.csv'])
+
+
+
 
 # 모델 로드
-with open('lgb_model.pkl', 'rb') as model_file:
-    model = pickle.load(model_file)
+with open('lgb_model.pkl', 'rb') as lgb_model:
+    model = pickle.load(lgb_model)
 explainer = shap.TreeExplainer(model)
+merged_data = pd.read_csv('downloaded_merged_data.csv')
+movie_info = pd.read_csv('downloaded_movie_info.csv')
 
-merged_data = pd.read_csv('merged_data.csv')
-movie_info = pd.read_csv('movie_info.csv')
+
 
 # 특성 목록 정의
 features = ['age', 'occupation', 'Action', 'Adventure', 'Animation', "Children's",
