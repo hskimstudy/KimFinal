@@ -91,6 +91,8 @@ async def predict_rating(user_data: UserInput):
         top_positive_features = [features[i] for i in sorted_positive_indices[:3]]
         top_negative_features = [features[i] for i in sorted_negative_indices[:3]]
 
+        recommended_movies = recommended_movies.reset_index(drop=True)
+
         return {
         "predicted_rating": user_pred,
         "recommended_movies": recommended_movies[['title', 'rating']].to_dict(orient='records'),
