@@ -91,8 +91,6 @@ async def predict_rating(user_data: UserInput):
         top_positive_features = [features[i] for i in sorted_positive_indices[:3]]
         top_negative_features = [features[i] for i in sorted_negative_indices[:3]]
 
-        recommended_movies = recommended_movies.reset_index(drop=True)
-
         return {
         "predicted_rating": user_pred,
         "recommended_movies": recommended_movies[['title', 'rating']].to_dict(orient='records'),
@@ -108,13 +106,12 @@ async def predict_rating(user_data: UserInput):
             "feature": feature,
             "shap_value": negative_shap_values[features.index(feature)]
         } for feature in top_negative_features
-
     ]
     }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=dict(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8070)
+    uvicorn.run(app, host="0.0.0.0", port=3000)
