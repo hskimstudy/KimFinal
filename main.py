@@ -108,12 +108,13 @@ async def predict_rating(user_data: UserInput):
             "feature": feature,
             "shap_value": negative_shap_values[features.index(feature)]
         } for feature in top_negative_features
+
     ]
     }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=dict(e))
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=3000)
+    uvicorn.run(app, host="0.0.0.0", port=8070)
