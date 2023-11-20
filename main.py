@@ -29,26 +29,26 @@ def fetch_data_from_s3(bucket_name, file_names):
         s3.download_file(bucket_name, file_name, f'downloaded_{file_name}')
 
 
-fetch_data_from_s3('kimkimkim', ['lgb_model.pkl', 'merged_data.csv', 'movie_info.csv'])
+fetch_data_from_s3('kimkimkim', ['lgb_model2.pkl', 'merged_data2.csv', 'movie_info2.csv'])
 
 
 
 
 # 모델 로드
-with open('lgb_model.pkl', 'rb') as lgb_model:
+with open('lgb_model2.pkl', 'rb') as lgb_model:
     model = pickle.load(lgb_model)
 explainer = shap.TreeExplainer(model)
-merged_data = pd.read_csv('downloaded_merged_data.csv')
-movie_info = pd.read_csv('downloaded_movie_info.csv')
+merged_data = pd.read_csv('downloaded_merged_data2.csv')
+movie_info = pd.read_csv('downloaded_movie_info2.csv')
 
 
 
 # 특성 목록 정의
-features = ['age', 'occupation', 'Action', 'Adventure', 'Animation', "Children's",
+features = ['Action', 'Adventure', 'Animation', "Children's",
     'Comedy', 'Crime', 'Documentary', 'Drama',
     'Fantasy', 'Film-Noir', 'Horror', 'Musical',
     'Mystery', 'Romance', 'Sci-Fi', 'Thriller',
-    'War', 'Western', 'gender']
+    'War', 'Western']
 
 # FastAPI에서 사용할 입력 데이터 모델 정의
 class UserInput(BaseModel):
@@ -69,9 +69,9 @@ async def predict_rating(user_data: UserInput):
             'Fantasy', 'Film-Noir', 'Horror', 'Musical',
             'Mystery', 'Romance', 'Sci-Fi', 'Thriller',
             'War', 'Western']
-        features = ['age', 'occupation'] + genre_columns + ['gender']
+        features =  genre_columns 
 
-        user_features = [user_data.age, user_data.occupation] + [user_data.genres.get(genre, 0) for genre in genre_columns] + [1 if user_data.gender == 'M' else 0]
+        user_features = [user_data.genres.get(genre, 0) for genre in genre_columns] 
         
         user_df = pd.DataFrame([user_features], columns=features)
 
