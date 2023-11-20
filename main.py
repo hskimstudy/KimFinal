@@ -84,7 +84,7 @@ async def predict_rating(user_data: UserInput):
         average_ratings = unique_movies.groupby('movie_id')['rating'].mean().reset_index()
 
         recommended_movies = average_ratings[average_ratings['rating'] >= user_pred]
-        recommended_movies = recommended_movies.sort_values(by='rating', ascending=False).head(6)
+        recommended_movies = recommended_movies.sample(n=6, random_state=42)
 
     # Merge with movie titles
         recommended_movies = recommended_movies.merge(movie_info[['movie_id', 'title']], on='movie_id', how='inner')
