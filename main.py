@@ -35,7 +35,7 @@ fetch_data_from_s3('kimkimkim', ['lgb_model2.pkl', 'merged_data2.csv', 'movie_in
 
 
 # 모델 로드
-with open('lgb_model2.pkl', 'rb') as lgb_model:
+with open('downloaded_lgb_model2.pkl', 'rb') as lgb_model:
     model = pickle.load(lgb_model)
 explainer = shap.TreeExplainer(model)
 merged_data = pd.read_csv('downloaded_merged_data2.csv')
